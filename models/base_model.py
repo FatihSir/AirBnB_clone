@@ -12,7 +12,7 @@ class BaseModel:
     def __init__(self):
         """Initialization method to set a unique id and save creation time"""
         self.id = str(uuid4())
-        self.created_at = datetime.now().isoformat()
+        self.created_at = datetime.now()
         self.updated_at = self.created_at
 
     def __str__(self):
@@ -22,7 +22,7 @@ class BaseModel:
 
     def save(self):
         """A method to update updated_at to the current time"""
-        self.updated_at = datetime.now().isoformat()
+        self.updated_at = datetime.now()
 
     def to_dict(self):
         """
@@ -32,7 +32,9 @@ class BaseModel:
         Return:
             info (dict): dictionary contains instance's information
         """
-        info = {"__class__": self.__class__.__name__}
-        for key, value in self.__dict__.items():
-            info[key] = value
+        info = self.__dict__.copy()
+        info["__class__"] = self.__class__.__name__
+        info["created_at"] = self.created_at.isoformat()
+        info["updated_at"] = self.updated_at.isoformat()
+
         return info
