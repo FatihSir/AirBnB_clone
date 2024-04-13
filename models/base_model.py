@@ -39,3 +39,4 @@ class BaseModel:
         info = {"__class__": self.__class__.__name__}
         for key, value in self.__dict__.items():
             info[key] = value
+        return info
