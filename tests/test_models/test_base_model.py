@@ -13,6 +13,7 @@ class TestBaseModel(unittest.TestCase):
     model_1 = BaseModel()
     model_2 = BaseModel()
     model_3 = BaseModel()
+    model_4 = BaseModel()
 
     def test_initialization(self):
         self.assertEqual(self.model_1.__class__.__name__, "BaseModel")
@@ -45,6 +46,17 @@ class TestBaseModel(unittest.TestCase):
         self.assertRegex(self.model_3.__str__(), "created_at")
         self.assertRegex(self.model_3.__str__(), "updated_at")
         self.assertRegex(self.model_3.__str__(), "id")
+
+    def test_to_class(self):
+        self.model_4.name = "AirBnB"
+        self.model_4.price = 89
+        self.model_5 = BaseModel(**self.model_4.to_dict())
+
+        self.assertEqual(self.model_5.name, self.model_4.__dict__['name'])
+        self.assertEqual(self.model_4.price, self.model_4.price)
+        self.assertEqual(self.model_4.created_at, self.model_4.created_at)
+        self.assertEqual(self.model_4.updated_at, self.model_4.updated_at)
+        self.assertEqual(self.model_4.id, self.model_5.id)
 
 
 if __name__ == "__main__":
