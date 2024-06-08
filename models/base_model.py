@@ -4,6 +4,7 @@
 
 from uuid import uuid4
 from datetime import datetime
+import models
 
 
 class BaseModel:
@@ -36,6 +37,8 @@ class BaseModel:
             self.created_at = datetime.now()
             self.updated_at = self.created_at
 
+            models.storage.new(self)
+
     def __str__(self):
         """ A method the returns information about an object
 
@@ -49,6 +52,7 @@ class BaseModel:
         updated_at with the current datetime
         """
         self.updated_at = datetime.now()
+        models.storage.save()
 
     def to_dict(self):
         """A method  returns a dictionary containing all
@@ -56,7 +60,7 @@ class BaseModel:
 
         Return:
             self.__dict__ (dict): a dictionary that contains
-            object's information
+                                  object's information
 
         """
         self.__dict__['__class__'] = self.__class__.__name__
