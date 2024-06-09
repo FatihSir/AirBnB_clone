@@ -23,15 +23,10 @@ class BaseModel:
         if len(kwargs) >= 1:
             for attr, value in kwargs.items():
                 if attr == "__class__":
-                    pass
-                elif attr == "update_at":
-                    setattr(self, attr, datetime.strptime(value,
-                            "%Y-%m-%dT%H:%M:%S.%f"))
-                elif attr == "created_at":
-                    setattr(self, attr, datetime.strptime(value,
-                            "%Y-%m-%dT%H:%M:%S.%f"))
-                else:
-                    setattr(self, attr, value)
+                    continue
+                if attr == "updated_at" or attr == "created_at":
+                    setattr(self, attr, datetime.fromisoformat(value))
+                setattr(self, attr, value)
         else:
             self.id = str(uuid4())
             self.created_at = datetime.now()
@@ -59,12 +54,13 @@ class BaseModel:
         keys/values of __dict__ of the instance
 
         Return:
-            self.__dict__ (dict): a dictionary that contains
-                                  object's information
-
+            self.__dict__ (dict): a dictionary that contains object's
+            information
         """
-        self.__dict__['__class__'] = self.__class__.__name__
-        self.__dict__['created_at'] = datetime.isoformat(self.created_at)
-        self.__dict__['updated_at'] = datetime.isoformat(self.updated_at)
 
-        return self.__dict__
+        my_dict = dict(**self.__dict__)
+        my_dict['__class__'] = self.__class__.__name__
+        my_dict['created_at'] = my_dict['created_at'].isoformat()
+        my_dict['updated_at'] = my_dict['updated_at'].isoformat()
+
+        return my_dict

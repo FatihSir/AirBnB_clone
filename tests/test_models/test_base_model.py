@@ -4,6 +4,8 @@
 
 import unittest
 from models.base_model import BaseModel
+import os
+import json
 
 
 class TestBaseModel(unittest.TestCase):
@@ -14,6 +16,7 @@ class TestBaseModel(unittest.TestCase):
     model_2 = BaseModel()
     model_3 = BaseModel()
     model_4 = BaseModel()
+    model_5 = BaseModel()
 
     def test_initialization(self):
         self.assertEqual(self.model_1.__class__.__name__, "BaseModel")
@@ -32,9 +35,7 @@ class TestBaseModel(unittest.TestCase):
         self.info = self.model_1.to_dict()
         self.assertEqual(self.model_1.__dict__['name'], self.info['name'])
         self.assertEqual(self.model_1.__dict__['price'], self.info['price'])
-        self.assertEqual(self.model_1.__dict__['__class__'],
-                         self.info['__class__'])
-        self.assertEqual(self.model_1.__dict__['__class__'], "BaseModel")
+        self.assertEqual(self.info['__class__'], "BaseModel")
 
     def test_save(self):
         self.model_2.save()
@@ -57,6 +58,18 @@ class TestBaseModel(unittest.TestCase):
         self.assertEqual(self.model_4.created_at, self.model_4.created_at)
         self.assertEqual(self.model_4.updated_at, self.model_4.updated_at)
         self.assertEqual(self.model_4.id, self.model_5.id)
+
+    def test_storage(self):
+        b = BaseModel()
+        b.save()
+        key = "{}.{}".format(type(b).__name__, b.id)
+        d = {key: b.to_dict()}
+        self.assertTrue(os.path.isfile("file.json"))
+        with open("file.json",
+                  "r", encoding="utf-8") as f:
+            self.assertEqual(len(f.read()), len(json.dumps(d)))
+            f.seek(0)
+            self.assertEqual(json.load(f), d)
 
 
 if __name__ == "__main__":

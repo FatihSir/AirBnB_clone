@@ -17,22 +17,22 @@ class FileStorage:
 
     def all(self):
         """A method that returns the dictionary __objects"""
-        return self.__objects
+        return FileStorage.__objects
 
     def new(self, obj):
-        """ A method that sets in __objects the obj with
-            key <obj class name>.id """
+        """ A method that sets in __objects the obj with key
+            <obj class name>.id """
         class_name = obj.__class__.__name__
         key = class_name + "." + str(obj.id)
-        self.__objects[key] = obj
+        FileStorage.__objects[key] = obj
 
     def save(self):
-        """ A method that serializes __objects to the
-            JSON file (path: __file_path) """
-        with open(file=self.__file_path, mode='w') as f:
+        """ A method that serializes __objects to the JSON file
+            (path: __file_path) """
+        with open(file=FileStorage.__file_path, mode='w') as f:
             json.dump(
-                {key: value.to_dict() for key,
-                 value in self.__objects.items()}, f)
+                {key: value.to_dict()
+                 for key, value in FileStorage.__objects.items()}, f)
 
     def reload(self):
         """
@@ -41,10 +41,10 @@ class FileStorage:
         no exception should be raised
         """
 
-        if not os.path.exists(self.__file_path):
+        if not os.path.exists(FileStorage.__file_path):
             return
 
-        with open(file=self.__file_path, mode='r') as f:
+        with open(file=FileStorage.__file_path, mode='r') as f:
             des = None
             try:
                 des = json.load(f)
@@ -54,6 +54,6 @@ class FileStorage:
             if des is None:
                 return
 
-            self.__objects = {
+            FileStorage.__objects = {
                 k: BaseModel(**v)
                 for k, v in des.items()}
