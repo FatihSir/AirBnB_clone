@@ -1,5 +1,5 @@
 # 0x00. AirBnB clone - The console
-![AirBnB](1.PNG)
+![AirBnB](1.jpeg)
 
 Welcome to the AirBnB clone project! This initiative marks the beginning of your journey towards building a comprehensive web application inspired by AirBnB. Start by reading the AirBnB concept page to understand the broader context of the project.
 
